@@ -1,0 +1,6 @@
+{
+  "name": "Aarambh Farmhouse Staycation & Resort",
+  "description": "A serene luxury farmhouse resort in Morbe, Panvel, Maharashtra featuring a large swimming pool, AC rooms, unlimited food, gazebo, garden lawn, and unforgettable family and group getaways near Navi Mumbai.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
