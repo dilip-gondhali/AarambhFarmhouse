@@ -50,23 +50,19 @@ export const Navbar: React.FC = () => {
         }`}
       >
         <div className="max-w-7xl mx-auto px-5 sm:px-8 h-20 flex items-center justify-between gap-8">
-          {/* Zone 1: Clean single-element Brand Zone */}
+          {/* Zone 1: Clean single-element Brand Zone with transparent logo */}
           <a
             href="#home"
             aria-label="Aarambh Farmhouse Staycation & Resort Home"
             className="flex items-center whitespace-nowrap shrink-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#607D50] rounded-sm"
           >
-            {isScrolled ? (
-              <img
-                src={RESORT_IMAGES.brandLogoLight}
-                alt="Aarambh Farmhouse Staycation & Resort"
-                className="h-14 w-auto object-contain mix-blend-multiply"
-              />
-            ) : (
-              <span className="font-serif text-2xl sm:text-[1.75rem] font-semibold tracking-wide text-[#FFFFFF]">
-                Aarambh Farmhouse
-              </span>
-            )}
+            <img
+              src={isScrolled ? RESORT_IMAGES.brandLogoLight : RESORT_IMAGES.brandLogoDark}
+              alt="Aarambh Farmhouse Staycation & Resort"
+              className={`h-12 sm:h-14 w-auto object-contain transition-opacity duration-200 ${
+                isScrolled ? '' : 'drop-shadow-[0_2px_8px_rgba(0,0,0,0.45)]'
+              }`}
+            />
           </a>
 
           {/* Zone 2: Clean single-line text navigation links */}

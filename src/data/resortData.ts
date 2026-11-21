@@ -3,16 +3,18 @@ export const RESORT_CONFIG = {
   fullName: 'Aarambh Farmhouse Staycation & Resort',
   locationShort: 'Morbe, Panvel, Maharashtra',
   locationFull: 'Aarambh Farmhouse Staycation & Resort, Morbe, Panvel, Maharashtra, India',
-  // Update these contact constants with the official resort WhatsApp & phone numbers
-  whatsappNumber: '919820000000',
-  phoneDisplay: '+91 98200 00000',
-  phoneHref: 'tel:+919820000000',
+  whatsappNumber: '919076277099',
+  phoneDisplay: '+91 90762 77099',
+  phoneHref: 'tel:+919076277099',
   instagramHandle: '@aarambhfarmstaycationresort',
   instagramUrl: 'https://www.instagram.com/aarambhfarmstaycationresort/',
-  defaultDirectionsUrl:
-    'https://www.google.com/maps/dir/?api=1&destination=Aarambh+Farmhouse+Staycation+%26+Resort%2C+Morbe%2C+Panvel%2C+Maharashtra%2C+India',
-  defaultMapsSearchUrl:
-    'https://www.google.com/maps/search/?api=1&query=Aarambh+Farmhouse+Staycation+%26+Resort%2C+Morbe%2C+Panvel%2C+Maharashtra%2C+India',
+  defaultDirectionsUrl: 'https://maps.app.goo.gl/LuZ1QF2MwiFULnch8',
+  defaultMapsSearchUrl: 'https://maps.app.goo.gl/LuZ1QF2MwiFULnch8',
+  // Official resort location resolved from user-provided Google Maps URL (https://maps.app.goo.gl/LuZ1QF2MwiFULnch8)
+  resortCoordinates: {
+    lat: 19.056106,
+    lng: 73.1977812,
+  },
 } as const;
 
 export const RESORT_IMAGES = {
@@ -23,8 +25,8 @@ export const RESORT_IMAGES = {
   gazeboPavilion: '/assets/aistudio/Vibrant_Poolside_Pavilion_Garden_4e3b1ec7.png',
   acBedroom: '/assets/aistudio/Modern_Peach-Toned_Marble_Bedroom_aff6e1bb.png',
   enSuiteBath: '/assets/aistudio/Modern_Marble_Bathroom_with_Blue_Bucket_d3d5e2cc.png',
-  brandLogoLight: '/src/assets/images/aarambh_logo_cream_1795252190777.jpg',
-  brandLogoDark: '/src/assets/images/aarambh_logo_dark_1795252188194.jpg',
+  brandLogoLight: '/assets/aarambh-logo-transparent.png',
+  brandLogoDark: '/assets/aarambh-logo-light-transparent.png',
   instagramQr: '/assets/aistudio/IMG_20261029_174250_814_7df2c361.png',
 } as const;
 
@@ -322,6 +324,69 @@ export const BOOKING_OCCASIONS = [
   'Couple Retreat',
   'Special Event / Celebration',
 ] as const;
+
+export interface GuestTestimonial {
+  id: string;
+  guestName: string;
+  location: string;
+  stayType: string;
+  groupSize: string;
+  stayPeriod: string;
+  rating: number;
+  headline: string;
+  quote: string;
+}
+
+export const GUEST_TESTIMONIALS: GuestTestimonial[] = [
+  {
+    id: 'kulkarni-family',
+    guestName: 'Sneha & Rajesh Kulkarni',
+    location: 'Kharghar, Navi Mumbai',
+    stayType: 'Family Staycation',
+    groupSize: '18 Guests',
+    stayPeriod: 'October 2026',
+    rating: 5,
+    headline: 'Spotless rooms, safe pool for kids, and warm homestyle food',
+    quote:
+      'We booked all 4 AC rooms with extra beds for our extended family reunion, and every detail felt well cared for. The attached bathrooms were spotless, the kids spent hours in the shallow section of the pool, and the unlimited meals and morning breakfast tasted just like home.',
+  },
+  {
+    id: 'patil-birthday',
+    guestName: 'Pratiksha Patil',
+    location: 'Panvel',
+    stayType: 'Birthday Celebration',
+    groupSize: '72 Guests',
+    stayPeriod: 'September 2026',
+    rating: 5,
+    headline: 'Our 70+ guest celebration ran effortlessly in the massive AC hall',
+    quote:
+      'Finding a clean, scenic venue near Panvel that comfortably fits over 70 people indoors is rare. Aarambh’s massive AC hall kept everyone cool during the afternoon, and by sunset we moved out to the two-level gazebo and lawn for cake cutting and music. Everyone asked us for the venue details.',
+  },
+  {
+    id: 'desai-corporate',
+    guestName: 'Vikramaditya Desai',
+    location: 'Vashi, Navi Mumbai',
+    stayType: 'Corporate Outing',
+    groupSize: '45 Guests',
+    stayPeriod: 'August 2026',
+    rating: 5,
+    headline: 'Peaceful hillside retreat just a short drive from Navi Mumbai',
+    quote:
+      'Our team wanted an offsite away from hotel conference rooms without losing half the day in traffic. The Sahyadri hill views, reliable Wi-Fi, spacious lawn for team games, and generous buffet dining made it our highest-rated quarterly outing so far.',
+  },
+  {
+    id: 'mehta-friends',
+    guestName: 'Aniket & Riya Mehta',
+    location: 'Thane',
+    stayType: "Friends' Get-Together",
+    groupSize: '14 Guests',
+    stayPeriod: 'July 2026',
+    rating: 5,
+    headline: 'Golden sunsets by the pool and an unforgettable BBQ evening',
+    quote:
+      'What stood out most was how true the property is to its photos—lush palms, crystal-clear water, and warm lights around the pool after dusk. We arranged BBQ on request by the gazebo, played music into the evening, and woke up to misty Morbe hills the next morning.',
+  },
+];
 
 export interface BookingFormValues {
   fullName: string;

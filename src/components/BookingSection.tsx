@@ -224,11 +224,11 @@ export const BookingSection: React.FC<BookingSectionProps> = ({ selectedOccasion
             {/* Authentic Resort Brand Crest & Instagram Scan Card */}
             <div className="grid grid-cols-2 gap-4">
               <div className="rounded-2xl overflow-hidden border border-[#E8DDC8] bg-[#F8F5EC] p-3 flex flex-col justify-between">
-                <div className="aspect-[16/10] rounded-xl overflow-hidden bg-[#F8F5EC] flex items-center justify-center">
+                <div className="aspect-[16/10] rounded-xl overflow-hidden bg-[#F8F5EC] p-2 flex items-center justify-center">
                   <ResilientImage
                     src={RESORT_IMAGES.brandLogoLight}
-                    alt="Official Aarambh Farmhouse Staycation & Resort logo"
-                    className="w-full h-full object-contain mix-blend-multiply"
+                    alt="Official Aarambh Farmhouse Staycation & Resort transparent logo"
+                    className="w-full h-full object-contain"
                   />
                 </div>
                 <p className="text-xs text-[#242824]/75 mt-2.5 text-center">

@@ -7,6 +7,7 @@ import { ExperiencesSection } from './components/ExperiencesSection';
 import { DiningSection } from './components/DiningSection';
 import { GallerySection } from './components/GallerySection';
 import { LocationSection } from './components/LocationSection';
+import { TestimonialsSection } from './components/TestimonialsSection';
 import { BookingSection } from './components/BookingSection';
 import { Footer } from './components/Footer';
 import { FloatingWhatsAppButton } from './components/FloatingWhatsAppButton';
@@ -55,6 +56,7 @@ export default function App() {
         <DiningSection />
         <GallerySection />
         <LocationSection />
+        <TestimonialsSection />
         <BookingSection selectedOccasion={selectedOccasion} />
       </main>
 

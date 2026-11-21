@@ -32,71 +32,64 @@ const ResortMapInner: React.FC<{
   const placesLib = useMapsLibrary('places');
   const loadingStatus = useApiLoadingStatus();
   const [markerRef, marker] = useAdvancedMarkerRef();
-  const [resolvedPlace, setResolvedPlace] = useState<ResolvedPlace | null>(null);
+  const [resolvedPlace, setResolvedPlace] = useState<ResolvedPlace>({
+    name: RESORT_CONFIG.fullName,
+    address: RESORT_CONFIG.locationFull,
+    lat: RESORT_CONFIG.resortCoordinates.lat,
+    lng: RESORT_CONFIG.resortCoordinates.lng,
+    googleMapsUri: RESORT_CONFIG.defaultDirectionsUrl,
+  });
   const [infoOpen, setInfoOpen] = useState(true);
-  const [lookupError, setLookupError] = useState<string | null>(null);
 
   const fetchResortLocation = useCallback(async () => {
     if (!placesLib || !placesLib.Place) return;
 
-    const queries = [
-      'Aarambh Farmhouse Staycation Resort Morbe Panvel Maharashtra India',
-      'Morbe, Panvel, Maharashtra, India',
-    ];
+    try {
+      const { places } = await placesLib.Place.searchByText({
+        textQuery: 'Aarambh Farmhouse Staycation Resort Morbe Panvel',
+        fields: ['displayName', 'formattedAddress', 'location', 'googleMapsURI'],
+        locationBias: {
+          center: RESORT_CONFIG.resortCoordinates,
+          radius: 1500,
+        },
+        region: 'IN',
+        language: 'en',
+      });
 
-    for (const textQuery of queries) {
-      try {
-        const { places } = await placesLib.Place.searchByText({
-          textQuery,
-          fields: ['displayName', 'formattedAddress', 'location', 'googleMapsURI'],
-          region: 'IN',
-          language: 'en',
-        });
+      const topPlace = places?.[0];
+      if (topPlace?.location) {
+        const lat =
+          typeof topPlace.location.lat === 'function'
+            ? topPlace.location.lat()
+            : Number(topPlace.location.lat);
+        const lng =
+          typeof topPlace.location.lng === 'function'
+            ? topPlace.location.lng()
+            : Number(topPlace.location.lng);
 
-        const topPlace = places?.[0];
-        if (topPlace?.location) {
-          const lat =
-            typeof topPlace.location.lat === 'function'
-              ? topPlace.location.lat()
-              : Number(topPlace.location.lat);
-          const lng =
-            typeof topPlace.location.lng === 'function'
-              ? topPlace.location.lng()
-              : Number(topPlace.location.lng);
-
-          if (!Number.isNaN(lat) && !Number.isNaN(lng)) {
-            const placeData: ResolvedPlace = {
-              name:
-                textQuery.includes('Aarambh') && topPlace.displayName
-                  ? topPlace.displayName
-                  : RESORT_CONFIG.fullName,
-              address: topPlace.formattedAddress || RESORT_CONFIG.locationFull,
-              lat,
-              lng,
-              googleMapsUri: topPlace.googleMapsURI || undefined,
-            };
-            setResolvedPlace(placeData);
-            onPlaceResolved(placeData);
-            setLookupError(null);
-            return;
-          }
-        }
-      } catch (err: unknown) {
-        const errMessage = err instanceof Error ? err.message : String(err);
-        if (
-          errMessage.includes('OVER_QUERY_LIMIT') ||
-          errMessage.includes('RESOURCE_EXHAUSTED') ||
-          errMessage.includes('QuotaExceededError') ||
-          errMessage.includes('429')
-        ) {
-          window.dispatchEvent(new CustomEvent('gmp-quota-exceeded'));
-          setLookupError('Interactive map location quota reached. Use Get Directions below.');
-          return;
+        if (!Number.isNaN(lat) && !Number.isNaN(lng)) {
+          const placeData: ResolvedPlace = {
+            name: topPlace.displayName || RESORT_CONFIG.fullName,
+            address: topPlace.formattedAddress || RESORT_CONFIG.locationFull,
+            lat,
+            lng,
+            googleMapsUri: RESORT_CONFIG.defaultDirectionsUrl,
+          };
+          setResolvedPlace(placeData);
+          onPlaceResolved(placeData);
         }
       }
+    } catch (err: unknown) {
+      const errMessage = err instanceof Error ? err.message : String(err);
+      if (
+        errMessage.includes('OVER_QUERY_LIMIT') ||
+        errMessage.includes('RESOURCE_EXHAUSTED') ||
+        errMessage.includes('QuotaExceededError') ||
+        errMessage.includes('429')
+      ) {
+        window.dispatchEvent(new CustomEvent('gmp-quota-exceeded'));
+      }
     }
-
-    setLookupError('Use Get Directions below for turn-by-turn navigation to Morbe, Panvel.');
   }, [placesLib, onPlaceResolved]);
 
   useEffect(() => {
@@ -106,7 +99,6 @@ const ResortMapInner: React.FC<{
   useEffect(() => {
     if (map && resolvedPlace) {
       map.panTo({ lat: resolvedPlace.lat, lng: resolvedPlace.lng });
-      map.setZoom(14);
     }
   }, [map, resolvedPlace]);
 
@@ -143,8 +135,8 @@ const ResortMapInner: React.FC<{
       <GoogleMap
         mapId="DEMO_MAP_ID"
         internalUsageAttributionIds={['gmp_mcp_codeassist_v1_aistudio']}
-        defaultCenter={{ lat: 20.5937, lng: 78.9629 }}
-        defaultZoom={5}
+        defaultCenter={RESORT_CONFIG.resortCoordinates}
+        defaultZoom={16}
         mapTypeId={mapTypeId}
         gestureHandling="cooperative"
         streetViewControl={false}
@@ -152,51 +144,41 @@ const ResortMapInner: React.FC<{
         fullscreenControl={true}
         className="w-full h-full"
       >
-        {resolvedPlace && (
-          <>
-            <AdvancedMarker
-              ref={markerRef}
-              position={{ lat: resolvedPlace.lat, lng: resolvedPlace.lng }}
-              title={resolvedPlace.name}
-              onClick={() => setInfoOpen((prev) => !prev)}
-            >
-              <Pin background="#183D2B" borderColor="#F8F5EC" glyphColor="#F8F5EC" scale={1.15} />
-            </AdvancedMarker>
+        <AdvancedMarker
+          ref={markerRef}
+          position={{ lat: resolvedPlace.lat, lng: resolvedPlace.lng }}
+          title={resolvedPlace.name}
+          onClick={() => setInfoOpen((prev) => !prev)}
+        >
+          <Pin background="#183D2B" borderColor="#F8F5EC" glyphColor="#F8F5EC" scale={1.15} />
+        </AdvancedMarker>
 
-            {infoOpen && marker && (
-              <InfoWindow
-                anchor={marker}
-                maxWidth={260}
-                onCloseClick={() => setInfoOpen(false)}
+        {infoOpen && marker && (
+          <InfoWindow
+            anchor={marker}
+            maxWidth={260}
+            onCloseClick={() => setInfoOpen(false)}
+          >
+            <div className="p-1 text-[#242824]">
+              <p className="font-serif text-lg font-semibold text-[#183D2B] leading-snug">
+                {RESORT_CONFIG.fullName}
+              </p>
+              <p className="text-xs text-[#242824]/80 mt-1 leading-relaxed">
+                {resolvedPlace.address}
+              </p>
+              <a
+                href={RESORT_CONFIG.defaultDirectionsUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1 text-xs font-semibold text-[#183D2B] underline mt-2 hover:text-[#607D50]"
               >
-                <div className="p-1 text-[#242824]">
-                  <p className="font-serif text-lg font-semibold text-[#183D2B] leading-snug">
-                    {RESORT_CONFIG.fullName}
-                  </p>
-                  <p className="text-xs text-[#242824]/80 mt-1 leading-relaxed">
-                    {resolvedPlace.address}
-                  </p>
-                  <a
-                    href={resolvedPlace.googleMapsUri || RESORT_CONFIG.defaultDirectionsUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center gap-1 text-xs font-semibold text-[#183D2B] underline mt-2 hover:text-[#607D50]"
-                  >
-                    <span>Directions on Google Maps</span>
-                    <ExternalLink className="w-3 h-3" />
-                  </a>
-                </div>
-              </InfoWindow>
-            )}
-          </>
+                <span>Directions on Google Maps</span>
+                <ExternalLink className="w-3 h-3" />
+              </a>
+            </div>
+          </InfoWindow>
         )}
       </GoogleMap>
-
-      {lookupError && (
-        <div className="absolute bottom-4 left-4 right-4 sm:right-auto bg-[#F8F5EC]/95 backdrop-blur-sm border border-[#E8DDC8] rounded-xl px-4 py-2.5 text-xs text-[#242824] shadow-sm">
-          {lookupError}
-        </div>
-      )}
     </div>
   );
 };

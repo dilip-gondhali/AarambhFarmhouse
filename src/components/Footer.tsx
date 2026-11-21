@@ -11,6 +11,7 @@ const QUICK_LINKS = [
   { label: 'Food & Dining', href: '#dining' },
   { label: 'Gallery', href: '#gallery' },
   { label: 'Location', href: '#location' },
+  { label: 'Guest Reviews', href: '#testimonials' },
   { label: 'Contact Us', href: '#booking' },
 ] as const;
 
@@ -33,11 +34,11 @@ export const Footer: React.FC = () => {
           {/* Column 1: Brand Identity */}
           <div className="lg:col-span-4 space-y-5">
             <a href="#home" aria-label="Aarambh Farmhouse Staycation & Resort" className="inline-block">
-              <div className="w-56 sm:w-64 aspect-[16/9] -ml-3 overflow-hidden">
+              <div className="w-52 sm:w-60 overflow-hidden">
                 <ResilientImage
                   src={RESORT_IMAGES.brandLogoDark}
-                  alt="Aarambh Farmhouse Staycation & Resort Logo"
-                  className="w-full h-full object-contain object-left"
+                  alt="Aarambh Farmhouse Staycation & Resort Transparent Logo"
+                  className="w-full h-auto object-contain object-left"
                 />
               </div>
             </a>
